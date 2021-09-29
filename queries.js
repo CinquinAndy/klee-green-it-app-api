@@ -1,6 +1,18 @@
 require('dotenv').config();
-const {Pool} = require('pg')
-const {response} = require("express");
+const string = require("string-sanitizer");
+const {Pool, query} = require('pg')
+const {response, request} = require("express");
+const regexTable = /^klee(.*)/;
+var listTables = [];
+
+function sanitizeString(str){
+    str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim,"");
+    return str.trim();
+}
+function sanitizeDate(str){
+    str = str.replace(/[^a-z0-9áéíóúñü \.,:_-]/gim,"");
+    return str.trim();
+}
 
 const pool = new Pool(
     {
@@ -17,100 +29,44 @@ const getTables = (request, response) => {
         if (error) {
             throw error
         }
-        response.status(200).json(result.rows);
+        var table = [];
+        for (const row of result.rows) {
+            if (row.table_name.match(/^klee(.*)/)) {
+                table.push(row.table_name);
+            }
+        }
+        response.status(200).json(table);
     })
 }
 
-// -------------- Get all informations from all tables ------------------
-const get_disk_read_write_rates = pool.query('select * from disk_read_write_rates;', (error, result) => {
+
+const dynamics = (req, res) => {
+    const params = sanitizeString(req.originalUrl.substring(1));
+    pool.query(
+        `SELECT * FROM ${params};`,
+        (error, results) => {
         if (error) {
             throw error
         }
-        response.status(200).json(result.rows)
-    }
-);
-const get_disk_performance = pool.query('select * from disk_performance;', (error, result) => {
+        res.status(200).json(results.rows);
+    })
+}
+
+const dynamicsBeetweenDate = (req, res) => {
+    const params = sanitizeString(req.originalUrl.substring(1).replace(/\/.*$/,""));
+    let { date_start, date_end } = req.query
+    date_start=sanitizeDate(date_start)
+    date_end=sanitizeDate(date_end)
+    pool.query(`SELECT * FROM public.${params} where time between '${date_start}' and '${date_end}';`, (error, results) => {
         if (error) {
             throw error
         }
-        response.status(200).json(result.rows)
-    }
-);
-const get_memory_cpu = pool.query('select * from memory_cpu;', (error, result) => {
-        if (error) {
-            throw error
-        }
-        response.status(200).json(result.rows)
-    }
-);
-const get_filesystem_space_utilization = pool.query('select * from filesystem_space_utilization;', (error, result) => {
-        if (error) {
-            throw error
-        }
-        response.status(200).json(result.rows)
-    }
-);
-const get_in_network = pool.query('select * from in_network;', (error, result) => {
-        if (error) {
-            throw error
-        }
-        response.status(200).json(result.rows)
-    }
-);
-const get_out_network = pool.query('select * from out_network;', (error, result) => {
-        if (error) {
-            throw error
-        }
-        response.status(200).json(result.rows)
-    }
-);
-const get_cpu_iowait_time = pool.query('select * from cpu_iowait_time;', (error, result) => {
-        if (error) {
-            throw error
-        }
-        response.status(200).json(result.rows)
-    }
-);
-const get_cpu_utilization = pool.query('select * from cpu_utilization;', (error, result) => {
-        if (error) {
-            throw error
-        }
-        response.status(200).json(result.rows)
-    }
-);
-const get_memory_utilization = pool.query('select * from memory_utilization;', (error, result) => {
-        if (error) {
-            throw error
-        }
-        response.status(200).json(result.rows)
-    }
-);
-const get_send_receive = pool.query('select * from send_receive;', (error, result) => {
-        if (error) {
-            throw error
-        }
-        response.status(200).json(result.rows)
-    }
-);
-const get_logged_in_users = pool.query('select * from logged_in_users;', (error, result) => {
-        if (error) {
-            throw error
-        }
-        response.status(200).json(result.rows)
-    }
-);
+        res.status(201).json(results.rows);
+    })
+}
 
 module.exports = {
-    getTables,
-    get_disk_read_write_rates,
-    get_disk_performance,
-    get_memory_cpu,
-    get_filesystem_space_utilization,
-    get_in_network,
-    get_out_network,
-    get_cpu_iowait_time,
-    get_cpu_utilization,
-    get_memory_utilization,
-    get_send_receive,
-    get_logged_in_users,
+    dynamics,
+    dynamicsBeetweenDate,
+    getTables
 }
