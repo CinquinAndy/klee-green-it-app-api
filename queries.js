@@ -21,7 +21,7 @@ const getTables = (request, response) => {
     })
 }
 
-// Get all informations from all tables
+// -------------- Get all informations from all tables ------------------
 const get_disk_read_write_rates = pool.query('select * from disk_read_write_rates;', (error, result) => {
         if (error) {
             throw error
