@@ -1,0 +1,23 @@
+{
+  "name": "klee-green-it-app-api",
+  "version": "1.0.0",
+  "description": "RESTful API with Node.js, Express, and PostgreSQL, for Klee",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CinquinAndy/klee-green-it-app-api.git"
+  },
+  "author": "Cinquin Andy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CinquinAndy/klee-green-it-app-api/issues"
+  },
+  "homepage": "https://github.com/CinquinAndy/klee-green-it-app-api#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^8.7.1"
+  }
+}
