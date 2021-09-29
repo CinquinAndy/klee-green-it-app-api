@@ -17,7 +17,11 @@
   },
   "homepage": "https://github.com/CinquinAndy/klee-green-it-app-api#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0"
   }
 }
