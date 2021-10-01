@@ -51,3 +51,4 @@ DATABASE= testdb
 PASSWORD= 123
 PORTPG= 5432
 ````
+then just run the project with a classic ``npm install`` & ``node index.js``
