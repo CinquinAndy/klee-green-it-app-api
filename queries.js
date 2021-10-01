@@ -1,5 +1,4 @@
 require('dotenv').config();
-require("string-sanitizer");
 const {Pool} = require('pg');
 
 // from w3c official post
