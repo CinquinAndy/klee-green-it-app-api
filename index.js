@@ -5,10 +5,10 @@ const app = express();
 const port = process.env.PORT;
 const db = require('./queries')
 var cors = require('cors');
-
-// To active cors policy more strict
-// var allowedOrigins = ['http://localhost:3000',
-//     'http://yourapp.com'];
+app.use(cors());
+// // To active cors policy more strict
+// var allowedOrigins = ['http://localhost:4200',
+//     'http://192.168.145.1:4200'];
 // app.use(cors({
 //     origin: function(origin, callback){
 //         // allow requests with no origin
@@ -30,11 +30,11 @@ app.use(
     })
 )
 
-app.get('/tables',db.getTables);
-app.get('/line/:table',db.getLineFromTable);
-app.get(/^\/klee_.*/,db.dynamics);
+app.get('/tables', db.getTables);
+app.get('/line/:table', db.getLineFromTable);
+app.get(/^\/klee_.*/, db.dynamics);
 app.post(/^\/klee_.*/, db.dynamicsBetweenDate);
-app.get(/^\/average\/klee_.*/,db.dynamicsAverage);
+app.get(/^\/average\/klee_.*/, db.dynamicsAverage);
 app.post(/^\/average\/klee_.*/, db.dynamicsAverageBetweenDate);
 app.get('/app/name/', db.getNameApplication);
 app.post('/app/add/name/', db.postNameApplication);
