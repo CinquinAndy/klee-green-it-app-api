@@ -23,6 +23,16 @@ const pool = new Pool(
     }
 );
 
+const app_pool = new Pool(
+    {
+        host: process.env.GREENITAPPHOST,
+        user: process.env.GREENITAPPUSER,
+        database: process.env.GREENITAPPDATABASE,
+        password: process.env.GREENITAPPPASSWORD,
+        port: process.env.GREENITAPPPORTPG
+    }
+);
+
 // get all tables name, from a regex sql query
 const getTables = (req, res) => {
     pool.query('SELECT table_name FROM information_schema.tables where table_name ~ \'^klee(.*)\';', (error, result) => {
@@ -190,11 +200,23 @@ const dynamicsAverageBetweenDate = (req, res) => {
     }
 }
 
+
+const postNameApplication = (req, res) => {
+    let {name} = req.query;
+    app_pool.query(`insert into klee_application (name) values ('${name}');`, (error, results) => {
+        if (error) {
+            throw error
+        }
+        res.status(201).json(results.rows);
+    })
+}
+
 module.exports = {
     dynamics,
     dynamicsBetweenDate,
     dynamicsAverage,
     dynamicsAverageBetweenDate,
     getLineFromTable,
-    getTables
+    getTables,
+    postNameApplication
 }
