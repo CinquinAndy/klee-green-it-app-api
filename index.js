@@ -18,6 +18,7 @@ app.get(/^\/klee_.*/,db.dynamics);
 app.post(/^\/klee_.*/, db.dynamicsBetweenDate);
 app.get(/^\/average\/klee_.*/,db.dynamicsAverage);
 app.post(/^\/average\/klee_.*/, db.dynamicsAverageBetweenDate);
+app.get('/app/name/', db.getNameApplication);
 app.post('/app/add/name/', db.postNameApplication);
 
 app.listen(port, () => {
