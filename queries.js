@@ -202,23 +202,17 @@ const dynamicsAverageBetweenDate = (req, res) => {
 
 
 const postNameApplication = (req, res) => {
-    let {name} = req.query;
-    if (!!name) {
-        app_pool.query(`insert into klee_application (name)
-                        values ('${name}');`, (error, results) => {
-            if (error) {
-                throw error
-            }
-            res.status(201).json({success:"tout c'est bien passer"});
-        })
-    } else {
-        res.status(200).json({error: "name n'est pas initialiser"})
-    }
+    app_pool.query(`insert into klee_application (name) values ('${name}');`, (error, results) => {
+        if (error) {
+            throw error
+        }
+        res.status(201).json({success: "tout c'est bien passer"});
+    })
 }
 
-const getNameApplication = (req,res) =>{
-    app_pool.query('select * from klee_application' , (error, results) => {
-        if (error){
+const getNameApplication = (req, res) => {
+    app_pool.query('select * from klee_application', (error, results) => {
+        if (error) {
             throw error
         }
         res.status(200).json(results.rows);
